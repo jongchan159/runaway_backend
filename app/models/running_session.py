@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 from typing import List
 from bson import ObjectId
-from datetime import datetime
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -18,12 +18,16 @@ class PyObjectId(ObjectId):
     def __modify_schema__(cls, field_schema):
         field_schema.update(type="string")
 
-class CourseModel(BaseModel):
+class RunningSessionModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    created_by: PyObjectId
-    route: List[List[float]]
-    recommendation_count: int = 0
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    user_id: PyObjectId
+    start_time: datetime = Field(default_factory=datetime.utcnow)
+    end_time: datetime = None
+    distance: float = 0
+    duration: int = 0  # in seconds
+    average_pace: float = 0
+    route: List[List[float]] = []
+    strength: int = 5
 
     class Config:
         allow_population_by_field_name = True
